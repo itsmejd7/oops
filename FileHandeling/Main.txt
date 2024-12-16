@@ -1,0 +1,106 @@
+package f;
+
+import java.io.*;
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) throws IOException, ClassNotFoundException {
+        StudentDatabase database = new StudentDatabase();
+        Scanner scanner = new Scanner(System.in);
+
+        while (true) {
+            System.out.println("\n--- Student Records Menu ---");
+            System.out.println("1. Create Database");
+            System.out.println("2. Display Database");
+            System.out.println("3. Delete Record");
+            System.out.println("4. Update Record");
+            System.out.println("5. Search Record");
+            System.out.println("6. Exit");
+            System.out.print("Enter your choice: ");
+            int choice = scanner.nextInt();
+
+            switch (choice) {
+                case 1 -> {
+                    // Create a new student record
+                    System.out.println("Enter Student Details:");
+                    System.out.print("ID: ");
+                    int id = scanner.nextInt();
+                    scanner.nextLine(); // Consume newline
+                    System.out.print("Name: ");
+                    String name = scanner.nextLine();
+                    System.out.print("Roll No: ");
+                    int rollNo = scanner.nextInt();
+                    scanner.nextLine(); // Consume newline
+                    System.out.print("Class: ");
+                    String studentClass = scanner.nextLine();
+                    System.out.print("Marks: ");
+                    double marks = scanner.nextDouble();
+                    scanner.nextLine(); // Consume newline
+                    System.out.print("Address: ");
+                    String address = scanner.nextLine();
+
+                    Student student = new Student(id, name, rollNo, studentClass, marks, address);
+                    database.createDatabase(student);
+                    System.out.println("Student record added successfully.");
+                }
+                case 2 -> {
+                    // Display all student records
+                    database.displayDatabase();
+                }
+                case 3 -> {
+                    // Delete a student record by ID
+                    System.out.print("Enter Student ID to delete: ");
+                    int id = scanner.nextInt();
+                    database.deleteRecord(id);
+                    System.out.println("Record deleted successfully.");
+                }
+                case 4 -> {
+                    // Update an existing student record
+                    System.out.println("Enter updated Student Details:");
+                    System.out.print("ID: ");
+                    int id = scanner.nextInt();
+                    scanner.nextLine(); // Consume newline
+                    System.out.print("Name: ");
+                    String name = scanner.nextLine();
+                    System.out.print("Roll No: ");
+                    int rollNo = scanner.nextInt();
+                    scanner.nextLine(); // Consume newline
+                    System.out.print("Class: ");
+                    String studentClass = scanner.nextLine();
+                    System.out.print("Marks: ");
+                    double marks = scanner.nextDouble();
+                    scanner.nextLine(); // Consume newline
+                    System.out.print("Address: ");
+                    String address = scanner.nextLine();
+
+                    Student updatedStudent = new Student(id, name, rollNo, studentClass, marks, address);
+                    database.updateRecord(updatedStudent);
+                    System.out.println("Record updated successfully.");
+                }
+                case 5 -> {
+                    // Search a student by ID
+                    System.out.print("Enter Student ID to search: ");
+                    int id = scanner.nextInt();
+                    Student student = database.searchRecord(id);
+                    if (student != null) {
+                        // Print student details directly
+                        System.out.println("Student ID: " + student.studentId);
+                        System.out.println("Name: " + student.name);
+                        System.out.println("Roll No: " + student.rollNo);
+                        System.out.println("Class: " + student.studentClass);
+                        System.out.println("Marks: " + student.marks);
+                        System.out.println("Address: " + student.address);
+                    } else {
+                        System.out.println("Record not found.");
+                    }
+                }
+                case 6 -> {
+                    // Exit the program
+                    System.out.println("Exiting program...");
+                    return;
+                }
+                default -> System.out.println("Invalid choice. Please try again.");
+            }
+        }
+    }
+}

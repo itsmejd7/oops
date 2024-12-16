@@ -1,0 +1,96 @@
+package f;
+
+import java.io.*;
+import java.util.*;
+
+public class StudentDatabase {
+    private static final String FILE_NAME = "StudentRecords.dat";
+
+    // Method to add a new student record to the database (file)
+    public void createDatabase(Student student) throws IOException {
+        try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(FILE_NAME, true))) {
+            out.writeObject(student);
+        }
+    }
+
+    // Method to display all student records
+    public void displayDatabase() throws IOException, ClassNotFoundException {
+        try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(FILE_NAME))) {
+            while (true) {
+                Student student = (Student) in.readObject();
+                // Print student details directly
+                System.out.println("Student ID: " + student.studentId);
+                System.out.println("Name: " + student.name);
+                System.out.println("Roll No: " + student.rollNo);
+                System.out.println("Class: " + student.studentClass);
+                System.out.println("Marks: " + student.marks);
+                System.out.println("Address: " + student.address);
+                System.out.println("---------------------------------------------------");
+            }
+        } catch (EOFException e) {
+            // End of file reached
+        }
+    }
+
+    // Method to search for a student by ID
+    public Student searchRecord(int studentId) throws IOException, ClassNotFoundException {
+        try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(FILE_NAME))) {
+            while (true) {
+                Student student = (Student) in.readObject();
+                if (student.studentId == studentId) {
+                    return student;
+                }
+            }
+        } catch (EOFException e) {
+            // End of file reached
+        }
+        return null;  // Not found
+    }
+
+    // Method to delete a record by student ID
+    public void deleteRecord(int studentId) throws IOException, ClassNotFoundException {
+        List<Student> students = new ArrayList<>();
+        
+        try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(FILE_NAME))) {
+            while (true) {
+                Student student = (Student) in.readObject();
+                if (student.studentId != studentId) {
+                    students.add(student);  // Add only those that do not match the studentId
+                }
+            }
+        } catch (EOFException e) {
+            // End of file reached
+        }
+
+        try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(FILE_NAME))) {
+            for (Student student : students) {
+                out.writeObject(student);  // Write remaining students back to the file
+            }
+        }
+    }
+
+    // Method to update a student's record by replacing it with a new one
+    public void updateRecord(Student updatedStudent) throws IOException, ClassNotFoundException {
+        List<Student> students = new ArrayList<>();
+
+        try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(FILE_NAME))) {
+            while (true) {
+                Student student = (Student) in.readObject();
+                if (student.studentId == updatedStudent.studentId) {
+                    students.add(updatedStudent);  // Replace the student record
+                } else {
+                    students.add(student);  // Keep the original record
+                }
+            }
+        } catch (EOFException e) {
+            // End of file reached
+        }
+
+        try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(FILE_NAME))) {
+            for (Student student : students) {
+                out.writeObject(student);  // Write updated records to the file
+            }
+        }
+    }
+}
+
