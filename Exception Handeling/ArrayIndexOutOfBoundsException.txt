@@ -1,0 +1,16 @@
+public class ArrayIndexOutOfBoundsDemo {
+
+    public static void main(String[] args) {
+        int[] numbers = {10, 20, 30, 40, 50};
+
+        try {
+            System.out.println("Accessing an array element at index 10:");
+            System.out.println(numbers[10]); // Invalid index
+
+        } catch (ArrayIndexOutOfBoundsException e) {
+            System.out.println("ArrayIndexOutOfBoundsException: Invalid array index accessed.");
+        } finally {
+            System.out.println("Program completed.");
+        }
+    }
+}
